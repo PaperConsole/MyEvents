@@ -1,13 +1,26 @@
 package com.MyEvents.model;
 
+import jakarta.annotation.Generated;
+import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 public class Event {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
    private String name;
+
    private String description;
+
+   @ManyToOne
+   @JoinColumn(name = "location_id")
    private Location location;
+
    private Set<Registration> registrations = new HashSet<>();
 
     public Event(Long id, String name, String description, Location location, Set<Registration> registrations) {

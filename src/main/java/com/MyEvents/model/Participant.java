@@ -1,12 +1,21 @@
 package com.MyEvents.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 public class Participant {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String email;
+
     private Set<Registration> registrations = new HashSet<>();
 
     public Participant(Long id, String name, String email, Set<Registration> registrations) {
