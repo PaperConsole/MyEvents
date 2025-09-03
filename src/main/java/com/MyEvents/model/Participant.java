@@ -1,9 +1,6 @@
 package com.MyEvents.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +12,7 @@ public class Participant {
     private Long id;
     private String name;
     private String email;
-
+    @OneToMany(mappedBy = "participant")
     private Set<Registration> registrations = new HashSet<>();
 
     public Participant(Long id, String name, String email, Set<Registration> registrations) {

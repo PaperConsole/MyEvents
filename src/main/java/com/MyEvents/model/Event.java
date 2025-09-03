@@ -21,6 +21,7 @@ public class Event {
    @JoinColumn(name = "location_id")
    private Location location;
 
+   @OneToMany(mappedBy = "event")
    private Set<Registration> registrations = new HashSet<>();
 
     public Event(Long id, String name, String description, Location location, Set<Registration> registrations) {
