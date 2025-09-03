@@ -15,6 +15,10 @@ public class Participant {
     @OneToMany(mappedBy = "participant")
     private Set<Registration> registrations = new HashSet<>();
 
+    public Participant() {
+
+    }
+
     public Participant(Long id, String name, String email, Set<Registration> registrations) {
         this.id = id;
         this.name = name;

@@ -14,6 +14,9 @@ public class Location {
    private String city;
    private String address;
 
+   public Location() {
+
+   }
     public Location(Long id, String name, String city, String address) {
         this.id = id;
         this.name = name;

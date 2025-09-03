@@ -17,6 +17,8 @@ public class Event {
 
    private String description;
 
+   private int capacity;
+
    @ManyToOne
    @JoinColumn(name = "location_id")
    private Location location;
@@ -24,11 +26,15 @@ public class Event {
    @OneToMany(mappedBy = "event")
    private Set<Registration> registrations = new HashSet<>();
 
-    public Event(Long id, String name, String description, Location location, Set<Registration> registrations) {
+    public Event() {
+    }
+
+    public Event(Long id, String name, String description, Location location, int capacity, Set<Registration> registrations) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.location = location;
+        this.capacity = capacity;
         this.registrations = registrations;
     }
 
@@ -64,7 +70,17 @@ public class Event {
         return registrations;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
     public void setRegistrations(Set<Registration> registrations) {
         this.registrations = registrations;
+
+
     }
 }

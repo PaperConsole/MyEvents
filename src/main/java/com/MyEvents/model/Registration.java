@@ -15,6 +15,10 @@ public class Registration {
     private Participant participant;
     private String registrationDate;
 
+    public Registration() {
+
+    }
+
     public Registration(Long id, Event event, Participant participant, String registrationDate) {
         this.id = id;
         this.event = event;
