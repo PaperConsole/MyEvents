@@ -1,5 +1,6 @@
 package com.MyEvents.service;
 
+import com.MyEvents.dto.EventDto;
 import com.MyEvents.model.Event;
 import com.MyEvents.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +23,19 @@ public class EventService {
       return event;
     }
 
-    public List<Event> findAll() {
-        return eventRepository.findAll();
+    public List<EventDto> findAll() {
+        return eventRepository.findAll().stream().map(Event::toEventDto).toList();
     }
 
-    public Event findById(Long id) {
+    public EventDto findById(Long id) {
         return eventRepository
                 .findById(id)
+                .map(Event::toEventDto)
                 .orElseThrow(() -> new RuntimeException("Not found"));
     }
 
-    public Event update(Event updatedEvent) {
+    /* TODO - fix update method
+    public EventDto update(Event updatedEvent) {
         Event eventToUpdate = findById(updatedEvent.getId());
         eventToUpdate.setName(updatedEvent.getName());
         eventToUpdate.setCapacity(updatedEvent.getCapacity());
@@ -41,9 +44,16 @@ public class EventService {
         eventToUpdate.setRegistrations(updatedEvent.getRegistrations());
         return eventRepository.save(eventToUpdate);
     }
-
+*/
     public void deleteById(Long id) {
         eventRepository.deleteById(id);
+    }
+
+    public long save(EventDto eventDto) {
+        Event event = eventDto.toEvent();
+        eventRepository.save(event);
+        return event.getId();
+
     }
 
     public int checkAvailableSeats(Event event) {

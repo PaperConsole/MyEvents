@@ -5,6 +5,8 @@ import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -20,8 +22,9 @@ public class Event {
 
    private int capacity;
 
-   @ManyToOne
-   @JoinColumn(name = "location_id")
+   //TODO - set optional to false when LocationService implemented
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "location_id", nullable = true)
    private Location location;
 
    @OneToMany(mappedBy = "event")
@@ -38,11 +41,25 @@ public class Event {
         this.capacity = capacity;
         this.registrations = registrations;
     }
-
+/*
     public EventDto toEventDto() {
         return new EventDto(this.getName(), this.getDescription(), this.getCapacity(), this.getLocation().getName(), this.getRegistrations().stream().map(Registration::getParticipant).toList().stream().map(Participant::getEmail).toList());
     }
+*/
+public EventDto toEventDto() {
+    String locName = (this.getLocation() != null) ? this.getLocation().getName() : null;
 
+    List<String> emails = (this.getRegistrations() == null)
+            ? List.of()
+            : this.getRegistrations().stream()
+            .map(Registration::getParticipant)
+            .filter(Objects::nonNull)
+            .map(Participant::getEmail)
+            .filter(Objects::nonNull)
+            .toList();
+
+    return new EventDto(this.getName(), this.getDescription(), this.getCapacity(), locName, emails);
+}
     public Long getId() {
         return id;
     }
