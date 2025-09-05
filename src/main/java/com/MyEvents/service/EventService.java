@@ -5,6 +5,8 @@ import com.MyEvents.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class EventService {
 
@@ -18,6 +20,10 @@ public class EventService {
     public Event create(Event newEvent) {
       Event event =  eventRepository.save(newEvent);
       return event;
+    }
+
+    public List<Event> findAll() {
+        return eventRepository.findAll();
     }
 
     public Event findById(Long id) {
@@ -35,4 +41,13 @@ public class EventService {
         eventToUpdate.setRegistrations(updatedEvent.getRegistrations());
         return eventRepository.save(eventToUpdate);
     }
+
+    public void deleteById(Long id) {
+        eventRepository.deleteById(id);
+    }
+
+    public int checkAvailableSeats(Event event) {
+     return event.getCapacity() - event.getRegistrations().size();
+    }
+
 }
