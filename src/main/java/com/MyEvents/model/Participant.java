@@ -1,9 +1,11 @@
 package com.MyEvents.model;
 
+import com.MyEvents.dto.ParticipantDto;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Participant {
@@ -24,6 +26,10 @@ public class Participant {
         this.name = name;
         this.email = email;
         this.registrations = registrations;
+    }
+
+    public ParticipantDto toDto() {
+        return new ParticipantDto(name, email, registrations.stream().map(Registration::getEvent).toList().stream().map(Event::getName).collect(Collectors.toSet()));
     }
 
     public Long getId() {
