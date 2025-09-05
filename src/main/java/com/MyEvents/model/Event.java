@@ -1,5 +1,6 @@
 package com.MyEvents.model;
 
+import com.MyEvents.dto.EventDto;
 import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 
@@ -36,6 +37,10 @@ public class Event {
         this.location = location;
         this.capacity = capacity;
         this.registrations = registrations;
+    }
+
+    public EventDto toEventDto() {
+        return new EventDto(this.getName(), this.getDescription(), this.getCapacity(), this.getLocation().getName(), this.getRegistrations().stream().map(Registration::getParticipant).toList().stream().map(Participant::getEmail).toList());
     }
 
     public Long getId() {
