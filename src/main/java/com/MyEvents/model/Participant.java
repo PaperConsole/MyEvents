@@ -28,10 +28,6 @@ public class Participant {
         this.registrations = registrations;
     }
 
-    public ParticipantDto toDto() {
-        return new ParticipantDto(name, email, registrations.stream().map(Registration::getEvent).toList().stream().map(Event::getName).collect(Collectors.toSet()));
-    }
-
     public Long getId() {
         return id;
     }

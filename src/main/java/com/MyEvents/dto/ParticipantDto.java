@@ -1,6 +1,8 @@
 package com.MyEvents.dto;
 import com.MyEvents.model.Participant;
 import com.MyEvents.model.Registration;
+import com.MyEvents.service.EventService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,21 +10,12 @@ import java.util.Set;
 public class ParticipantDto {
     private String name;
     private String email;
-    private Set<String> registrationEventName = new HashSet<>();
+    private Set<Long> registrationId = new HashSet<>();
 
-    public ParticipantDto(String name, String email, Set<String> registrationEventName) {
+    public ParticipantDto(String name, String email, Set<Long> registrationId) {
         this.name = name;
         this.email = email;
-        this.registrationEventName = registrationEventName;
-    }
-
-    public Participant toParticipant() {
-        Participant participant = new Participant();
-        participant.setEmail(email);
-        participant.setName(name);
-
-        // participant.setRegistrations(registrations); TODO implement later
-        return participant;
+        this.registrationId = registrationId;
     }
 
     public String getName() {
@@ -41,5 +34,12 @@ public class ParticipantDto {
         this.email = email;
     }
 
+    public Set<Long> getRegistrationId() {
+        return registrationId;
+    }
+
+    public void setRegistrationId(Set<Long> registrationId) {
+        this.registrationId = registrationId;
+    }
 
 }

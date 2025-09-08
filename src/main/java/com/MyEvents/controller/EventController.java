@@ -26,7 +26,7 @@ DELETE
 
     @GetMapping("/{id}")
     public ResponseEntity<EventDto> getEventById(@PathVariable long id) {
-            return ResponseEntity.ok(eventService.findById(id));
+            return ResponseEntity.ok(eventService.findById(id).toEventDto());
     }
 
     @GetMapping("")
@@ -37,7 +37,7 @@ DELETE
     @PostMapping("")
     public ResponseEntity<EventDto> createEvent(@RequestBody EventDto eventDto) throws URISyntaxException {
         Long uriId = eventService.save(eventDto);
-        return ResponseEntity.created(new URI("/api/events/" + uriId)).body(eventService.findById(uriId));
+        return ResponseEntity.created(new URI("/api/events/" + uriId)).body(eventService.findById(uriId).toEventDto());
     }
 
     @DeleteMapping("/{id}")

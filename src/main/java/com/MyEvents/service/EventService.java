@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventService {
@@ -27,11 +28,15 @@ public class EventService {
         return eventRepository.findAll().stream().map(Event::toEventDto).toList();
     }
 
-    public EventDto findById(Long id) {
+    public Event findById(Long id) {
         return eventRepository
                 .findById(id)
-                .map(Event::toEventDto)
                 .orElseThrow(() -> new RuntimeException("Not found"));
+    }
+
+    public Event findByNameContainingIgnoreCase(String name) {
+        return eventRepository.findByNameContainingIgnoreCase(name.trim()).stream().findFirst()
+                .orElseThrow(() -> new RuntimeException("Event not found: " + name));
     }
 
     /* TODO - fix update method

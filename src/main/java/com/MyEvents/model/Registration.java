@@ -1,5 +1,6 @@
 package com.MyEvents.model;
 
+import com.MyEvents.dto.RegistrationDto;
 import jakarta.persistence.*;
 
 @Entity
@@ -24,6 +25,10 @@ public class Registration {
         this.event = event;
         this.participant = participant;
         this.registrationDate = registrationDate;
+    }
+
+    public RegistrationDto toDto() {
+        return new RegistrationDto(event.getName(), participant.getEmail(), getRegistrationDate());
     }
 
     public Long getId() {

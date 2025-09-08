@@ -20,7 +20,6 @@ public class ParticipantController {
         this.participantService = participantService;
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<ParticipantDto> GetParticipantById(@PathVariable long id) {
         return ResponseEntity.ok(participantService.getParticipantById(id));

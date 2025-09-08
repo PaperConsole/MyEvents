@@ -48,15 +48,27 @@ public class DataInitializer implements CommandLineRunner {
         event.setLocation(loc);
         eventRepository.save(event);
 
+        Event event2 = new Event();
+        event2.setName("Salsa dance");
+        event2.setDescription("Learn the basics of salsa");
+        event2.setCapacity(2);
+        event2.setLocation(loc);
+        eventRepository.save(event2);
+
         Participant p = new Participant();
         p.setName("Anna Kowalska");
         p.setEmail("anna@example.com");
         participantRepository.save(p);
 
+        Participant p2 = new Participant();
+        p2.setName("Tomasz Kowalski");
+        p2.setEmail("tomasz@example.com");
+        participantRepository.save(p2);
+
         Registration reg = new Registration();
         reg.setEvent(event);
         reg.setParticipant(p);
-        reg.setRegistrationDate(String.valueOf(LocalDate.now()));
+        reg.setRegistrationDate("12-10-2025");
         registrationRepository.save(reg);
     }
 }
