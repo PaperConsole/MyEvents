@@ -4,6 +4,7 @@ import com.MyEvents.dto.EventDto;
 import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +23,8 @@ public class Event {
 
    private int capacity;
 
+   private LocalDate date;
+
    //TODO - set optional to false when LocationService implemented
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "location_id", nullable = true)
@@ -33,12 +36,13 @@ public class Event {
     public Event() {
     }
 
-    public Event(Long id, String name, String description, Location location, int capacity, Set<Registration> registrations) {
+    public Event(Long id, String name, String description, Location location, int capacity, LocalDate date,  Set<Registration> registrations) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.location = location;
         this.capacity = capacity;
+        this.date = date;
         this.registrations = registrations;
     }
 /*
@@ -58,7 +62,7 @@ public EventDto toEventDto() {
             .filter(Objects::nonNull)
             .toList();
 
-    return new EventDto(this.getName(), this.getDescription(), this.getCapacity(), locName, emails);
+    return new EventDto(this.getName(), this.getDescription(), this.getCapacity(), locName, this.getDate(), emails);
 }
     public Long getId() {
         return id;
@@ -86,6 +90,14 @@ public EventDto toEventDto() {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public Set<Registration> getRegistrations() {

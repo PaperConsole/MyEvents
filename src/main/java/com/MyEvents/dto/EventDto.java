@@ -2,6 +2,7 @@ package com.MyEvents.dto;
 import com.MyEvents.model.Event;
 import com.MyEvents.model.Location;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,13 +18,16 @@ public class EventDto {
 
         private String locationName;
 
+        private LocalDate date;
+
         private List<String> registrationEmail = new ArrayList<>();
 
-    public EventDto(String name, String description, int capacity, String locationName, List<String> registrationEmail) {
+    public EventDto(String name, String description, int capacity, String locationName, LocalDate date, List<String> registrationEmail) {
         this.name = name;
         this.description = description;
         this.capacity = capacity;
         this.locationName = locationName;
+        this.date = date;
         this.registrationEmail = registrationEmail;
     }
 
@@ -32,6 +36,8 @@ public class EventDto {
         event.setName(this.getName());
         event.setCapacity(this.getCapacity());
         event.setDescription(this.getDescription());
+        event.setDate(this.getDate());
+
        // event.setLocation(new Location()); //TODO implement LocationService class and findByName method
        // event.setRegistrations(new HashSet<>()); //TODO implement RegistrationsService class to match emails-participants-registrations
         return event;
@@ -67,6 +73,14 @@ public class EventDto {
 
     public void setLocationName(String locationName) {
         this.locationName = locationName;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public List<String> getRegistrationEmail() {

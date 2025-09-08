@@ -46,6 +46,7 @@ public class DataInitializer implements CommandLineRunner {
         event.setDescription("Learn the basics of Spring Boot");
         event.setCapacity(50);
         event.setLocation(loc);
+        event.setDate(LocalDate.of(2027, 1, 1));
         eventRepository.save(event);
 
         Event event2 = new Event();
@@ -53,6 +54,7 @@ public class DataInitializer implements CommandLineRunner {
         event2.setDescription("Learn the basics of salsa");
         event2.setCapacity(2);
         event2.setLocation(loc);
+        event2.setDate(LocalDate.of(2026, 1, 1));
         eventRepository.save(event2);
 
         Participant p = new Participant();
