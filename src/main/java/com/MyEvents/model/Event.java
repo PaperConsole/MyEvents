@@ -3,6 +3,9 @@ package com.MyEvents.model;
 import com.MyEvents.dto.EventDto;
 import jakarta.annotation.Generated;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -17,12 +20,15 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
+    @NotBlank(message = "Name can not be empty")
    private String name;
 
    private String description;
 
+   @Min(1)
    private int capacity;
 
+   @Future(message = "Date can not be of today and previous days")
    private LocalDate date;
 
    //TODO - set optional to false when LocationService implemented
@@ -45,11 +51,7 @@ public class Event {
         this.date = date;
         this.registrations = registrations;
     }
-/*
-    public EventDto toEventDto() {
-        return new EventDto(this.getName(), this.getDescription(), this.getCapacity(), this.getLocation().getName(), this.getRegistrations().stream().map(Registration::getParticipant).toList().stream().map(Participant::getEmail).toList());
-    }
-*/
+
 public EventDto toEventDto() {
     String locName = (this.getLocation() != null) ? this.getLocation().getName() : null;
 

@@ -2,6 +2,7 @@ package com.MyEvents.controller;
 
 import com.MyEvents.dto.EventDto;
 import com.MyEvents.service.EventService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ DELETE
     }
 
     @PostMapping("")
-    public ResponseEntity<EventDto> createEvent(@RequestBody EventDto eventDto) throws URISyntaxException {
+    public ResponseEntity<EventDto> createEvent(@Valid @RequestBody EventDto eventDto) throws URISyntaxException {
         Long uriId = eventService.save(eventDto);
         return ResponseEntity.created(new URI("/api/events/" + uriId)).body(eventService.findById(uriId).toEventDto());
     }

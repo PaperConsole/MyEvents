@@ -2,6 +2,7 @@ package com.MyEvents.controller;
 
 import com.MyEvents.dto.ParticipantDto;
 import com.MyEvents.service.ParticipantService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class ParticipantController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ParticipantDto> addParticipant(@RequestBody ParticipantDto participantDto) throws URISyntaxException {
+    public ResponseEntity<ParticipantDto> addParticipant(@Valid @RequestBody ParticipantDto participantDto) throws URISyntaxException {
         Long uriId = participantService.save(participantDto);
         return ResponseEntity.created(new URI("/api/participants" + uriId)).body(participantService.getParticipantById(uriId));
     }
