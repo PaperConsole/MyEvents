@@ -1,5 +1,9 @@
 package com.MyEvents.service;
 
+import com.MyEvents.exception.AlreadyRegisteredException;
+import com.MyEvents.exception.EventNotFoundException;
+import com.MyEvents.exception.ParticipantNotFoundException;
+import com.MyEvents.exception.RegistrationFullException;
 import com.MyEvents.model.Event;
 import com.MyEvents.model.Participant;
 import com.MyEvents.model.Registration;
@@ -49,15 +53,15 @@ e.g. if there is a place, if not registered twice)
 
     public Registration registerParticipantToEvent(long eventId, long participantId) {
 
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("There is no such event of id" + eventId));
-        Participant participant = participantRepository.findById(participantId).orElseThrow(() -> new RuntimeException("There is no such participant of id" + participantId));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+        Participant participant = participantRepository.findById(participantId).orElseThrow(() -> new ParticipantNotFoundException(participantId));
 
        if (eventService.checkAvailableSeats(event) <= 0) {
-           throw new RuntimeException("There are no places left at" + event.getName());
+           throw new RegistrationFullException(eventId);
        };
 
        if(participant.getRegistrations().stream().anyMatch(a -> a.getEvent().getId().equals(event.getId()))) {
-           throw new RuntimeException("Participant of id" + participantId + "is already registered for event of id" + eventId);
+           throw new AlreadyRegisteredException(participantId, eventId);
        }
 
         Registration registration = new Registration();
@@ -71,7 +75,7 @@ e.g. if there is a place, if not registered twice)
     }
 
     public Registration findById(long id) {
-      return registrationRepository.findById(id).orElseThrow(() -> new RuntimeException("Ther is no registratio with such id"));
+      return registrationRepository.findById(id).orElseThrow(() -> new RegistrationFullException(id));
     }
 
 }

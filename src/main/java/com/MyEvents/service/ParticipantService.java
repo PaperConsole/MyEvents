@@ -1,6 +1,8 @@
 package com.MyEvents.service;
 
 import com.MyEvents.dto.ParticipantDto;
+import com.MyEvents.exception.EventNotFoundException;
+import com.MyEvents.exception.ParticipantNotFoundException;
 import com.MyEvents.mapper.ParticipantMapper;
 import com.MyEvents.model.Event;
 import com.MyEvents.model.Participant;
@@ -24,7 +26,7 @@ public class ParticipantService {
     }
 
     public ParticipantDto getParticipantById(long id) {
-        return participantMapper.toDto(participantRepository.getReferenceById(id));
+        return participantMapper.toDto(participantRepository.findById(id).orElseThrow(() -> new ParticipantNotFoundException(id)));
     }
 
     public Long save(ParticipantDto participantDto) {
@@ -34,6 +36,6 @@ public class ParticipantService {
 
     public Participant findByEmailContainingIgnoreCase(String name) {
         return participantRepository.findByEmailContainingIgnoreCase(name.trim()).stream().findFirst()
-                .orElseThrow(() -> new RuntimeException("Event not found: " + name));
+                .orElseThrow(() -> new EventNotFoundException(name));
     }
 }

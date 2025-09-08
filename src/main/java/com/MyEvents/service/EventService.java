@@ -1,6 +1,7 @@
 package com.MyEvents.service;
 
 import com.MyEvents.dto.EventDto;
+import com.MyEvents.exception.EventNotFoundException;
 import com.MyEvents.model.Event;
 import com.MyEvents.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,12 @@ public class EventService {
     public Event findById(Long id) {
         return eventRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException("Not found"));
+                .orElseThrow(() -> new EventNotFoundException(id));
     }
 
     public Event findByNameContainingIgnoreCase(String name) {
         return eventRepository.findByNameContainingIgnoreCase(name.trim()).stream().findFirst()
-                .orElseThrow(() -> new RuntimeException("Event not found: " + name));
+                .orElseThrow(() -> new EventNotFoundException(name));
     }
 
     /* TODO - fix update method
