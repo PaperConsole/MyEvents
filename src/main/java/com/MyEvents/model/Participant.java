@@ -2,6 +2,8 @@ package com.MyEvents.model;
 
 import com.MyEvents.dto.ParticipantDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +15,8 @@ public class Participant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Email(message = "Invalid email address")
+    @NotBlank(message = "Email is required")
     private String email;
     @OneToMany(mappedBy = "participant")
     private Set<Registration> registrations = new HashSet<>();
