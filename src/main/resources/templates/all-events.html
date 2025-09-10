@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>All Events</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root{
+          --bg:#f7f9fc;        /* page background */
+          --card:#ffffff;      /* card background */
+          --fg:#0d1b2a;        /* main text */
+          --muted:#5b6777;     /* secondary text */
+          --line:#e6ecf2;      /* borders */
+          --accent:#2563eb;    /* accents/links */
+          --chip:#eef3ff;      /* chips bg */
+          --chip-border:#c6d4ff;
+          --row:#ffffff;       /* table rows */
+          --row2:#fafcff;      /* zebra alt */
+          --hover:#f1f6ff;     /* row hover */
+          --shadow:0 6px 24px rgba(13,27,42,.08);
+        }
+        html,body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans","Helvetica Neue",Arial}
+        .wrap{max-width:1100px;margin:32px auto;padding:0 16px}
+        h1{font-size:28px;margin:0 0 6px}
+        .sub{color:var(--muted);margin:0 0 22px}
+        .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+        .toolbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);background:#fbfdff}
+        .btn{appearance:none;border:1px solid var(--line);background:#f4f7fb;color:var(--fg);padding:.55rem .9rem;border-radius:10px;cursor:pointer}
+        .btn:hover{background:#ecf2fa}
+        .count{font-variant-numeric:tabular-nums}
+        table{width:100%;border-collapse:separate;border-spacing:0}
+        thead th{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);background:#fbfdff}
+        tbody td{padding:14px;border-bottom:1px solid var(--line);vertical-align:top;background:var(--row)}
+        tbody tr:nth-child(even) td{background:var(--row2)}
+        tbody tr:hover td{background:var(--hover)}
+        .badge{display:inline-block;padding:.25rem .55rem;border-radius:999px;background:#eef6ff;border:1px solid #d7e6ff}
+        .muted{color:var(--muted)}
+        .chip{display:inline-block;margin:.15rem .25rem 0 0;padding:.28rem .55rem;border-radius:999px;border:1px solid var(--chip-border);background:var(--chip);font-size:.85rem}
+        .empty{padding:28px;text-align:center;color:var(--muted)}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h1>All Events</h1>
+    <p class="sub">List of <code>EventDto</code> objects returned from <code>/events</code>.</p>
+
+    <div class="card">
+        <div class="toolbar">
+            <div class="sub">Total: <strong class="count" th:text="${#lists.size(eventsDto)}">0</strong></div>
+            <button class="btn" type="button" onclick="location.reload()">Refresh</button>
+        </div>
+
+        <!-- Empty state -->
+        <div class="empty" th:if="${#lists.isEmpty(eventsDto)}">
+            No events available.
+        </div>
+
+        <!-- Table -->
+        <div th:if="${!#lists.isEmpty(eventsDto)}">
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Capacity</th>
+                    <th>Location ID</th>
+                    <th>Date</th>
+                    <th>Registrations</th>
+                    <th>Registration IDs</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="event : ${eventsDto}">
+                    <td><span class="badge" th:text="${event.name}">Name</span></td>
+                    <td><span th:text="${event.description} ?: '—'" class="muted">—</span></td>
+                    <td class="count" th:text="${event.capacity}">0</td>
+                    <td class="count" th:text="${event.locationId}">0</td>
+                    <td><span th:text="${event.date != null ? #temporals.format(event.date, 'yyyy-MM-dd') : '—'}">—</span></td>
+                    <td><span class="count" th:text="${event.registrationId != null ? event.registrationId.size() : 0}">0</span></td>
+                    <td>
+                        <span th:if="${event.registrationId == null or #lists.isEmpty(event.registrationId)}" class="muted">—</span>
+                        <span th:if="${event.registrationId != null and !#lists.isEmpty(event.registrationId)}"
+                              th:each="rid : ${event.registrationId}"
+                              th:text="${rid}"
+                              class="chip">1</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

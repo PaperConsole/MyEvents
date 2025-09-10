@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Create New Event</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;background:#f7f9fc;margin:0;padding:0;color:#0d1b2a}
+    .wrap{max-width:700px;margin:40px auto;padding:0 16px}
+    h1{font-size:28px;margin-bottom:20px}
+    form{background:#fff;padding:24px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.08);border:1px solid #e6ecf2}
+    .field{margin-bottom:18px}
+    label{display:block;font-weight:600;margin-bottom:6px}
+    input,textarea{width:100%;padding:10px 12px;border:1px solid #cdd7e1;border-radius:8px;font-size:15px}
+    input:focus,textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 2px rgba(37,99,235,.2)}
+    .error{color:#b91c1c;font-size:13px;margin-top:4px}
+    .btn{appearance:none;border:none;background:#2563eb;color:#fff;font-size:15px;font-weight:600;padding:12px 20px;border-radius:10px;cursor:pointer}
+    .btn:hover{background:#1d4ed8}
+    .actions{margin-top:24px}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Create New Event</h1>
+
+  <form th:action="@{/events/new}" th:object="${event}" method="post">
+
+    <div class="field">
+      <label for="name">Name</label>
+      <input type="text" id="name" th:field="*{name}" placeholder="Event name" />
+      <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    </div>
+
+    <div class="field">
+      <label for="description">Description</label>
+      <textarea id="description" th:field="*{description}" rows="3" placeholder="Event description"></textarea>
+      <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+    </div>
+
+    <div class="field">
+      <label for="capacity">Capacity</label>
+      <input type="number" id="capacity" min="1" th:field="*{capacity}" />
+      <div class="error" th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></div>
+    </div>
+
+    <div class="field">
+      <label for="locationId">Location ID</label>
+      <input type="number" id="locationId" th:field="*{locationId}" />
+      <div class="error" th:if="${#fields.hasErrors('locationId')}" th:errors="*{locationId}"></div>
+    </div>
+
+    <div class="field">
+      <label for="date">Date</label>
+      <input type="date" id="date" th:field="*{date}" />
+      <div class="error" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
+    </div>
+
+    <!-- Optional: Registration IDs -->
+    <div class="field">
+      <label for="registrationId">Registration IDs (comma separated)</label>
+      <input type="text" id="registrationId"
+             th:field="*{registrationId}"
+             placeholder="e.g. 1, 2, 3" />
+      <div class="error" th:if="${#fields.hasErrors('registrationId')}" th:errors="*{registrationId}"></div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn">Save Event</button>
+    </div>
+
+  </form>
+</div>
+</body>
+</html>

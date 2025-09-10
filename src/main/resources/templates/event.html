@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="'Event: ' + ${eventDto.name}">Event details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root{
+          --bg:#f7f9fc; --card:#fff; --fg:#0d1b2a; --muted:#5b6777; --line:#e6ecf2;
+          --accent:#2563eb; --danger:#b91c1c; --ok:#1a7f37; --shadow:0 6px 24px rgba(13,27,42,.08);
+        }
+        body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans",Arial}
+        .wrap{max-width:900px;margin:40px auto;padding:0 16px}
+        .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+        .hdr{padding:18px 20px;border-bottom:1px solid var(--line);background:#fbfdff}
+        h1{margin:0;font-size:26px}
+        .sub{margin:6px 0 0;color:var(--muted)}
+        .body{padding:20px}
+        dl{display:grid;grid-template-columns:180px 1fr;gap:10px 16px;margin:0}
+        dt{color:var(--muted)}
+        dd{margin:0}
+        .count{font-variant-numeric:tabular-nums}
+        .note{color:var(--muted);font-size:.9rem}
+        .actions{margin-top:18px}
+        .btn{appearance:none;border:none;background:var(--accent);color:#fff;font-weight:600;padding:10px 16px;border-radius:10px;cursor:pointer}
+        .btn:hover{filter:brightness(0.95)}
+        .btn[disabled]{opacity:.6;cursor:not-allowed}
+        form{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;display:none}
+        form.show{display:block}
+        label{display:block;font-weight:600;margin-bottom:6px}
+        input[type="number"]{width:260px;max-width:100%;padding:10px 12px;border:1px solid #cdd7e1;border-radius:8px;font-size:15px}
+        input[type="number"]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(37,99,235,.2)}
+        .form-actions{margin-top:12px;display:flex;gap:10px}
+        .btn-outline{background:#f4f7fb;color:var(--fg)}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="card">
+        <div class="hdr">
+            <h1 th:text="${eventDto.name}">Event name</h1>
+            <p class="sub">Event ID: <span class="count" th:text="${eventId}">—</span></p>
+        </div>
+
+        <div class="body"
+             th:with="
+            regCount=${eventDto.registrationId != null ? eventDto.registrationId.size() : 0},
+            freeSeats=${eventDto.capacity - regCount}
+         ">
+
+            <dl>
+                <dt>Description</dt>
+                <dd th:text="${eventDto.description} ?: '—'">—</dd>
+
+                <dt>Date</dt>
+                <dd th:text="${eventDto.date != null ? #temporals.format(eventDto.date,'yyyy-MM-dd') : '—'}">—</dd>
+
+                <dt>Capacity</dt>
+                <dd><span class="count" th:text="${eventDto.capacity}">0</span></dd>
+
+                <dt>Location ID</dt>
+                <dd><span class="count" th:text="${eventDto.locationId}">0</span></dd>
+
+                <dt>Registrations</dt>
+                <dd>
+                    <span class="count" th:text="${regCount}">0</span>
+                    <span class="note" th:if="${regCount>0}">
+            (&nbsp;<span th:each="rid : ${eventDto.registrationId}"
+                         th:text="${rid}"
+                         class="count"
+                         style="margin-right:6px">1</span>)
+          </span>
+                </dd>
+
+                <dt>Free seats</dt>
+                <dd>
+                    <span class="count" th:text="${freeSeats}">0</span>
+                    <span class="note" th:if="${freeSeats <= 0}"> • No seats available</span>
+                </dd>
+            </dl>
+
+            <div class="actions">
+                <button class="btn" id="signupBtn" th:disabled="${freeSeats <= 0}">
+                    Sign up
+                </button>
+            </div>
+
+            <!-- Registration form -->
+            <form id="signupForm"
+                  th:action="@{/events/{id}/register(id=${eventId})}"
+                  method="post">
+                <!-- CSRF -->
+                <input type="hidden" th:if="${_csrf != null}"
+                       th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" name="eventId" th:value="${eventId}"/>
+
+                <div class="field">
+                    <label for="participantId">Participant ID</label>
+                    <input type="number" id="participantId" name="participantId" min="1" required />
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn">Confirm registration</button>
+                    <button type="button" class="btn btn-outline" id="cancelBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(){
+      const btn = document.getElementById('signupBtn');
+      const form = document.getElementById('signupForm');
+      const cancel = document.getElementById('cancelBtn');
+
+      if (btn) {
+        btn.addEventListener('click', function(){
+          if (this.hasAttribute('disabled')) return;
+          form.classList.add('show');
+          document.getElementById('participantId').focus();
+          form.scrollIntoView({behavior:'smooth'});
+        });
+      }
+      if (cancel) {
+        cancel.addEventListener('click', function(){
+          form.classList.remove('show');
+        });
+      }
+    })();
+</script>
+</body>
+</html>
