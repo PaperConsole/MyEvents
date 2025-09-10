@@ -1,46 +1,45 @@
 package com.MyEvents.dto;
 import com.MyEvents.model.Event;
 import com.MyEvents.model.Location;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class EventDto {
 
+    @NotBlank(message = "Name can not be empty")
         private String name;
 
         private String description;
 
+    @Min(value = 1, message = "Capacity must be at least 1")
         private int capacity;
 
-        private String locationName;
+        private long locationId;
 
+    @Future(message = "Date can not be of today and previous days")
         private LocalDate date;
 
-        private List<String> registrationEmail = new ArrayList<>();
+        private Set<Long> registrationId = new HashSet<>();
 
-    public EventDto(String name, String description, int capacity, String locationName, LocalDate date, List<String> registrationEmail) {
+    public EventDto(String name, String description, int capacity, long locationId, LocalDate date, Set<Long> registrationId) {
         this.name = name;
         this.description = description;
         this.capacity = capacity;
-        this.locationName = locationName;
+        this.locationId = locationId;
         this.date = date;
-        this.registrationEmail = registrationEmail;
+        this.registrationId = registrationId;
     }
 
-    public Event toEvent() {
-        Event event = new Event();
-        event.setName(this.getName());
-        event.setCapacity(this.getCapacity());
-        event.setDescription(this.getDescription());
-        event.setDate(this.getDate());
+    public EventDto() {
 
-       // event.setLocation(new Location()); //TODO implement LocationService class and findByName method
-       // event.setRegistrations(new HashSet<>()); //TODO implement RegistrationsService class to match emails-participants-registrations
-        return event;
     }
 
     public String getName() {
@@ -67,12 +66,12 @@ public class EventDto {
         this.capacity = capacity;
     }
 
-    public String getLocationName() {
-        return locationName;
+    public long getLocationId() {
+        return locationId;
     }
 
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
+    public void setLocationId(long locationId) {
+        this.locationId = locationId;
     }
 
     public LocalDate getDate() {
@@ -83,11 +82,11 @@ public class EventDto {
         this.date = date;
     }
 
-    public List<String> getRegistrationEmail() {
-        return registrationEmail;
+    public Set<Long> getRegistrationId() {
+        return registrationId;
     }
 
-    public void setRegistrationEmail(List<String> registrationEmail) {
-        this.registrationEmail = registrationEmail;
+    public void setRegistrationId(Set<Long> registrationId) {
+        this.registrationId = registrationId;
     }
 }

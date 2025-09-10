@@ -2,13 +2,14 @@ package com.MyEvents.service;
 
 import com.MyEvents.dto.EventDto;
 import com.MyEvents.exception.EventNotFoundException;
+import com.MyEvents.mapper.EventMapper;
 import com.MyEvents.model.Event;
 import com.MyEvents.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class EventService {
@@ -16,17 +17,14 @@ public class EventService {
     @Autowired
     private final EventRepository eventRepository;
 
+
     public EventService(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
+
     }
 
-    public Event create(Event newEvent) {
-      Event event =  eventRepository.save(newEvent);
-      return event;
-    }
-
-    public List<EventDto> findAll() {
-        return eventRepository.findAll().stream().map(Event::toEventDto).toList();
+    public List<Event> findAll() {
+        return eventRepository.findAll();
     }
 
     public Event findById(Long id) {
@@ -55,8 +53,7 @@ public class EventService {
         eventRepository.deleteById(id);
     }
 
-    public long save(EventDto eventDto) {
-        Event event = eventDto.toEvent();
+    public long save(Event event) {
         eventRepository.save(event);
         return event.getId();
 

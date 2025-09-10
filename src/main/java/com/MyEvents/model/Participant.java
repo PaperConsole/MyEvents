@@ -13,11 +13,16 @@ import java.util.stream.Collectors;
 public class Participant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
+
+    @NotBlank(message = "Name is required")
     private String name;
+
     @Email(message = "Invalid email address")
     @NotBlank(message = "Email is required")
     private String email;
+
     @OneToMany(mappedBy = "participant")
     private Set<Registration> registrations = new HashSet<>();
 

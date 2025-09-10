@@ -1,6 +1,7 @@
 package com.MyEvents.controller;
 
 import com.MyEvents.dto.EventDto;
+import com.MyEvents.mapper.EventMapper;
 import com.MyEvents.service.EventService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,31 +15,32 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/events")
 public class EventController {
-    /*EventController (REST):GET /api/events, GET /api/events/{id}, POST, PUT,
-DELETE
-     */
 
     @Autowired
     private EventService eventService;
 
-    public EventController(EventService eventService) {
+    @Autowired
+    private EventMapper eventMapper;
+
+    public EventController(EventService eventService, EventMapper eventMapper) {
         this.eventService = eventService;
+        this.eventMapper = eventMapper;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<EventDto> getEventById(@PathVariable long id) {
-            return ResponseEntity.ok(eventService.findById(id).toEventDto());
+            return ResponseEntity.ok(eventMapper.toEventDto(eventService.findById(id)));
     }
 
     @GetMapping("")
     public ResponseEntity<List<EventDto>> getAllEvents() {
-        return ResponseEntity.ok(eventService.findAll());
+        return ResponseEntity.ok(eventService.findAll().stream().map(eventMapper::toEventDto).toList());
     }
 
     @PostMapping("")
     public ResponseEntity<EventDto> createEvent(@Valid @RequestBody EventDto eventDto) throws URISyntaxException {
-        Long uriId = eventService.save(eventDto);
-        return ResponseEntity.created(new URI("/api/events/" + uriId)).body(eventService.findById(uriId).toEventDto());
+        Long uriId = eventService.save(eventMapper.toEvent(eventDto));
+        return ResponseEntity.created(new URI("/api/events/" + uriId)).body(eventMapper.toEventDto(eventService.findById(uriId)));
     }
 
     @DeleteMapping("/{id}")

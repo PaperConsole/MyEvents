@@ -52,20 +52,7 @@ public class Event {
         this.registrations = registrations;
     }
 
-public EventDto toEventDto() {
-    String locName = (this.getLocation() != null) ? this.getLocation().getName() : null;
 
-    List<String> emails = (this.getRegistrations() == null)
-            ? List.of()
-            : this.getRegistrations().stream()
-            .map(Registration::getParticipant)
-            .filter(Objects::nonNull)
-            .map(Participant::getEmail)
-            .filter(Objects::nonNull)
-            .toList();
-
-    return new EventDto(this.getName(), this.getDescription(), this.getCapacity(), locName, this.getDate(), emails);
-}
     public Long getId() {
         return id;
     }

@@ -18,6 +18,10 @@ public class ParticipantMapper {
     @Autowired
     private RegistrationService registrationService;
 
+    public ParticipantMapper(RegistrationService registrationService) {
+        this.registrationService = registrationService;
+    }
+
     public Participant toParticipant(ParticipantDto participantDto) {
         Participant participant = new Participant();
         participant.setEmail(participantDto.getEmail());
