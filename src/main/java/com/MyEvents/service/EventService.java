@@ -54,8 +54,7 @@ public class EventService {
     }
 
     public long save(Event event) {
-        eventRepository.save(event);
-        return event.getId();
+        return eventRepository.save(event).getId();
 
     }
 
