@@ -2,9 +2,12 @@ package com.MyEvents.service;
 
 import com.MyEvents.dto.EventDto;
 import com.MyEvents.exception.EventNotFoundException;
+import com.MyEvents.exception.LocationNotFoundException;
 import com.MyEvents.mapper.EventMapper;
 import com.MyEvents.model.Event;
+import com.MyEvents.model.Location;
 import com.MyEvents.repository.EventRepository;
+import com.MyEvents.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +20,13 @@ public class EventService {
     @Autowired
     private final EventRepository eventRepository;
 
+    @Autowired
+    private final LocationRepository locationRepository;
 
-    public EventService(EventRepository eventRepository) {
+
+    public EventService(EventRepository eventRepository, LocationRepository locationRepository) {
         this.eventRepository = eventRepository;
+        this.locationRepository = locationRepository;
 
     }
 
@@ -38,17 +45,24 @@ public class EventService {
                 .orElseThrow(() -> new EventNotFoundException(name));
     }
 
-    /* TODO - fix update method
-    public EventDto update(Event updatedEvent) {
-        Event eventToUpdate = findById(updatedEvent.getId());
-        eventToUpdate.setName(updatedEvent.getName());
-        eventToUpdate.setCapacity(updatedEvent.getCapacity());
-        eventToUpdate.setDescription(updatedEvent.getDescription());
-        eventToUpdate.setLocation(updatedEvent.getLocation());
-        eventToUpdate.setRegistrations(updatedEvent.getRegistrations());
-        return eventRepository.save(eventToUpdate);
+    public Event updateEvent(Long id, EventDto dto) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException(id));
+
+        event.setName(dto.getName());
+        event.setDescription(dto.getDescription());
+        event.setCapacity(dto.getCapacity());
+        event.setDate(dto.getDate());
+
+        if (dto.getLocationId() > 0) {
+            Location location = locationRepository.findById(dto.getLocationId())
+                    .orElseThrow(() -> new LocationNotFoundException(dto.getLocationId()));
+            event.setLocation(location);
+        }
+
+        return eventRepository.save(event);
     }
-*/
+
     public void deleteById(Long id) {
         eventRepository.deleteById(id);
     }

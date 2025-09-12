@@ -1,9 +1,14 @@
 package com.MyEvents.view;
 
 import com.MyEvents.dto.EventDto;
+import com.MyEvents.exception.AlreadyRegisteredException;
+import com.MyEvents.exception.EventNotFoundException;
+import com.MyEvents.exception.ParticipantNotFoundException;
+import com.MyEvents.exception.RegistrationFullException;
 import com.MyEvents.mapper.EventMapper;
 import com.MyEvents.model.Event;
 import com.MyEvents.service.EventService;
+import com.MyEvents.service.RegistrationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -25,6 +31,9 @@ public class EventViewController {
 
     @Autowired
     EventMapper eventMapper;
+
+    @Autowired
+    RegistrationService registrationService;
 
     public EventViewController(EventService eventService) {
         this.eventService = eventService;
@@ -59,6 +68,24 @@ public class EventViewController {
         }
         eventService.save(eventMapper.toEvent(eventDto));
         return "redirect:/events";
+    }
+
+    @PostMapping("/{id}/register")
+    public String register(@PathVariable Long id,
+                           @RequestParam long participantId,
+                           RedirectAttributes ra) {
+        try {
+            registrationService.registerParticipantToEvent(id, participantId);
+            ra.addAttribute("success", "Registered successfully.");
+        } catch (AlreadyRegisteredException e) {
+            ra.addAttribute("error", "You are already registered for this event.");
+            ra.addAttribute("showForm", "1");
+        } catch (RegistrationFullException e) {
+            ra.addAttribute("error", "No seats available for this event.");
+        } catch (EventNotFoundException | ParticipantNotFoundException e) {
+            ra.addAttribute("error", e.getMessage());
+        }
+        return "redirect:/events/{id}";
     }
 
 
